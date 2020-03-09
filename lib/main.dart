@@ -6,6 +6,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'QTwitter',
       theme: ThemeData(
         primarySwatch: Colors.orange,
@@ -15,7 +16,7 @@ class App extends StatelessWidget {
   }
 }
 
-class HomePage extends StiniatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
