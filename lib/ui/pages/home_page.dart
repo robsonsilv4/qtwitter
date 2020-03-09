@@ -1,10 +1,18 @@
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/models/post_model.dart';
+import '../../data/repositories/post_repository.dart';
 import '../shared/widgets/avatar.dart';
 
 class HomePage extends StatelessWidget {
+  final postRepository = PostRepository(
+    url: 'https://jsonplaceholder.typicode.com/posts',
+    client: Dio(),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,16 +57,32 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  ListView _postList() {
-    return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) {
-        return _postItem(context: context);
+  Widget _postList() {
+    return FutureBuilder(
+      future: postRepository.fetchPosts(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final List<Post> posts = snapshot.data;
+
+          return ListView.builder(
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return _postItem(
+                context: context,
+                post: posts.elementAt(index),
+              );
+            },
+          );
+        }
+
+        return Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
 
-  Padding _postItem({@required BuildContext context}) {
+  Padding _postItem({@required BuildContext context, Post post}) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 8.0,
@@ -70,12 +94,12 @@ class HomePage extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Avatar(url: 'https://picsum.photos/200'),
+              Avatar(url: 'https://picsum.photos/seed/picsum/200'),
               SizedBox(width: 8.0),
               Flexible(
                 child: Column(
                   children: <Widget>[
-                    _texts(context: context),
+                    _texts(context: context, post: post),
                     _icons(),
                   ],
                 ),
@@ -87,15 +111,19 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _texts({@required BuildContext context}) {
+  Widget _texts({@required BuildContext context, Post post}) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Row(
           children: <Widget>[
-            Text(
-              'Lorem ipsum',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Flexible(
+              child: Text(
+                post.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(width: 5.0),
             Text(
@@ -127,7 +155,7 @@ class HomePage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Text(
-            'Mussum Ipsum, cacilds vidis litro abertis. Todo mundo vê os porris que eu tomo, mas ninguém vê os tombis que eu levo! Si num tem leite então bota uma pinga aí cumpadi!',
+            post.body,
             style: TextStyle(fontSize: 12.0),
             textAlign: TextAlign.start,
             maxLines: 4,

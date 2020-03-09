@@ -14,6 +14,7 @@ class App extends StatelessWidget {
       title: 'QTwitter',
       theme: ThemeData(
         primarySwatch: Colors.orange,
+        brightness: Brightness.light,
       ),
       home: HomePage(),
     );
