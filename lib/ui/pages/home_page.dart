@@ -7,6 +7,10 @@ import '../../data/models/post_model.dart';
 import '../../data/repositories/post_repository.dart';
 import '../shared/widgets/avatar.dart';
 
+int generateNumber(int range) {
+  return Random().nextInt(range);
+}
+
 class HomePage extends StatelessWidget {
   final postRepository = PostRepository(
     url: 'https://jsonplaceholder.typicode.com/posts',
@@ -23,7 +27,9 @@ class HomePage extends StatelessWidget {
 
   Widget _appBar({@required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).brightness == Brightness.light
+          ? Colors.white
+          : Theme.of(context).primaryColor,
       elevation: 1.0,
       leading: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -44,7 +50,7 @@ class HomePage extends StatelessWidget {
           ),
           child: Icon(
             Icons.info,
-            color: Theme.of(context).primaryColor,
+            color: Colors.orange,
           ),
         ),
       ],
@@ -127,7 +133,7 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(width: 5.0),
             Text(
-              '@lipsum',
+              '@${post.title.substring(0, 10)}',
               style: TextStyle(
                 color: Colors.grey,
                 // fontSize: 12.0,
@@ -144,7 +150,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             Text(
-              '${Random().nextInt(59)} minutos',
+              '${generateNumber(59)} minutos',
               style: TextStyle(
                 color: Colors.grey,
                 // fontSize: 12.0,
@@ -171,10 +177,66 @@ class HomePage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Icon(Icons.chat, size: 16, color: Colors.grey),
-        Icon(Icons.repeat, size: 16, color: Colors.grey),
-        Icon(Icons.favorite, size: 16, color: Colors.grey),
-        Icon(Icons.share, size: 16, color: Colors.grey),
+        Row(
+          children: <Widget>[
+            Icon(Icons.chat, size: 16, color: Colors.grey),
+            SizedBox(
+              width: 5.0,
+            ),
+            Text(
+              generateNumber(100).toString(),
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12.0,
+              ),
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Icon(Icons.repeat, size: 16, color: Colors.grey),
+            SizedBox(
+              width: 5.0,
+            ),
+            Text(
+              generateNumber(100).toString(),
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12.0,
+              ),
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Icon(Icons.favorite, size: 16, color: Colors.grey),
+            SizedBox(
+              width: 5.0,
+            ),
+            Text(
+              generateNumber(100).toString(),
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12.0,
+              ),
+            )
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Icon(Icons.share, size: 16, color: Colors.grey),
+            SizedBox(
+              width: 5.0,
+            ),
+            Text(
+              generateNumber(100).toString(),
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 12.0,
+              ),
+            )
+          ],
+        ),
       ],
     );
   }
